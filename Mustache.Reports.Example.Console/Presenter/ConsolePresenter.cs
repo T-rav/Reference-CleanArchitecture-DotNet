@@ -28,7 +28,7 @@ namespace Mustache.Reports.Example.Console.Presenter
             _errors = output;
         }
 
-        public void Render(string outputDirectory)
+        public void Render(string outputDirectory, string extension)
         {
             if (_errors != null)
             {
@@ -36,7 +36,7 @@ namespace Mustache.Reports.Example.Console.Presenter
                 return;
             }
 
-            Persist_Report(outputDirectory, _file);
+            Persist_Report(outputDirectory, _file, extension);
 
             Display_File_Location(outputDirectory);
         }
@@ -58,11 +58,12 @@ namespace Mustache.Reports.Example.Console.Presenter
         }
 
         private void Persist_Report(string reportOutputDirectory, 
-                                    IFileOutput successContent)
+                                    IFileOutput successContent,
+                                    string extension)
         {
             Ensure_Directory(reportOutputDirectory);
 
-            var reportPath = Path.Combine(reportOutputDirectory, $"{successContent.FileName}.pdf");
+            var reportPath = Path.Combine(reportOutputDirectory, $"{successContent.FileName}.{extension}");
             Remove_Old_Report(reportPath);
 
             Write_Report(successContent, reportPath);

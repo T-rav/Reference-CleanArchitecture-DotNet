@@ -5,6 +5,7 @@ namespace Mustache.Reports.Example.Console.Domain
 {
     public interface IConsolePresenter : IRespondWithSuccessOrError<IFileOutput, ErrorOutput>
     {
-        void Render(string outputDirectory);
+        void Render(string outputDirectory,
+                    string extension);
     }
 }

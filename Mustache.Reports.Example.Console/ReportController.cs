@@ -26,10 +26,11 @@ namespace Mustache.Reports.Example.Console
         {
             //Render_Pdf_Report(reportOutputDirectory, reportDataFilePath);
 
-            Render_Word_Report(reportDataFilePath);
+            Render_Word_Report(reportOutputDirectory, reportDataFilePath);
         }
 
-        private void Render_Word_Report(string reportDataFilePath)
+        private void Render_Word_Report(string reportOutputDirectory,
+                                        string reportDataFilePath)
         {
             var jsonData = Read_Report_Data(reportDataFilePath);
             var inputMessage = new RenderWordInput
@@ -40,17 +41,19 @@ namespace Mustache.Reports.Example.Console
             };
 
             _wordUseCase.Execute(inputMessage, _presenter);
+
+            _presenter.Render(reportOutputDirectory, "docx");
         }
 
         private void Render_Pdf_Report(string reportOutputDirectory, 
-                                               string reportDataFilePath)
+                                       string reportDataFilePath)
         {
             var jsonData = Read_Report_Data(reportDataFilePath);
             var inputMessage = Create_Word_Input_Message(jsonData);
 
             _pdfUseCase.Execute(inputMessage, _presenter);
     
-            _presenter.Render(reportOutputDirectory);
+            _presenter.Render(reportOutputDirectory, "pdf");
         }
 
         private static string Read_Report_Data(string reportDataFilePath)
