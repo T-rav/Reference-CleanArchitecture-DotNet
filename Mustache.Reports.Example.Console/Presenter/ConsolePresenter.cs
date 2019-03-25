@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Microsoft.Extensions.Logging;
 using Mustache.Reports.Example.Console.Domain;
 using StoneAge.CleanArchitecture.Domain.Messages;

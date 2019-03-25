@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Mustache.Reports.Domain.Pdf;
 using Mustache.Reports.Domain.Report.Word;
-using StoneAge.CleanArchitecture.Domain.Messages;
 using StoneAge.CleanArchitecture.Presenters;
 
 namespace Mustache.Reports.Example.Web
 {
     [Route("api/report/v1/create")]
-    public class ReportController
+    public class ReportController  : Controller
     {
         private readonly IRenderWordUseCase _wordUsecase;
         private readonly IRenderAsWordThenPdfUseCase _pdfUsecase;
@@ -25,8 +24,6 @@ namespace Mustache.Reports.Example.Web
             _options = options.Value;
         }
 
-        [Produces("application/vnd.openxmlformats-officedocument.wordprocessingml.document")]
-        [ProducesResponseType(typeof(ErrorOutput), 422)]
         [HttpGet("word")]
         public IActionResult Create_Word()
         {
@@ -43,8 +40,6 @@ namespace Mustache.Reports.Example.Web
             return presenter.Render();
         }
 
-        [Produces("application/pdf")]
-        [ProducesResponseType(typeof(ErrorOutput), 422)]
         [HttpGet("pdf")]
         public IActionResult Create_Pdf()
         {
@@ -65,7 +60,7 @@ namespace Mustache.Reports.Example.Web
         {
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var jsonPath = Path.Combine(basePath, _options.SampleDataLocation);
-            var jsonData = File.ReadAllText(jsonPath);
+            var jsonData = System.IO.File.ReadAllText(jsonPath);
             return jsonData;
         }
     }

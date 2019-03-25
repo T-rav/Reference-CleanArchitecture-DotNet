@@ -8,29 +8,47 @@ namespace Mustache.Reports.Example.Console
 {
     public class ReportController
     {
-        private readonly IRenderAsWordThenPdfUseCase _usecase;
+        private readonly IRenderAsWordThenPdfUseCase _pdfUseCase;
+        private readonly IRenderWordUseCase _wordUseCase;
         private readonly IConsolePresenter _presenter;
 
-        public ReportController(IRenderAsWordThenPdfUseCase usecase, 
+        public ReportController(IRenderAsWordThenPdfUseCase pdfUseCase, 
+                                IRenderWordUseCase wordUseCase,
                                 IConsolePresenter presenter)
         {
-            _usecase = usecase;
+            _pdfUseCase = pdfUseCase;
+            _wordUseCase = wordUseCase;
             _presenter = presenter;
         }
 
         public void Run(string reportOutputDirectory, 
                         string reportDataFilePath)
         {
-            Render_Report_With_Images(reportOutputDirectory, reportDataFilePath);
+            //Render_Pdf_Report(reportOutputDirectory, reportDataFilePath);
+
+            Render_Word_Report(reportDataFilePath);
         }
 
-        private void Render_Report_With_Images(string reportOutputDirectory, 
+        private void Render_Word_Report(string reportDataFilePath)
+        {
+            var jsonData = Read_Report_Data(reportDataFilePath);
+            var inputMessage = new RenderWordInput
+            {
+                TemplateName = "ReportWithImages",
+                ReportName = "ExampleReport",
+                JsonModel = jsonData
+            };
+
+            _wordUseCase.Execute(inputMessage, _presenter);
+        }
+
+        private void Render_Pdf_Report(string reportOutputDirectory, 
                                                string reportDataFilePath)
         {
             var jsonData = Read_Report_Data(reportDataFilePath);
             var inputMessage = Create_Word_Input_Message(jsonData);
 
-            _usecase.Execute(inputMessage, _presenter);
+            _pdfUseCase.Execute(inputMessage, _presenter);
     
             _presenter.Render(reportOutputDirectory);
         }
